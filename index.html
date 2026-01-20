@@ -12,12 +12,6 @@
             box-sizing: border-box;
         }
 
-        html, body {
-            width: 100%;
-            height: 100%;
-            overflow-x: hidden;
-        }
-
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #000;
@@ -27,7 +21,7 @@
             -webkit-text-size-adjust: 100%;
         }
 
-        /* Seção 1 - Hero */
+        /* Seção 1 - Hero com Motion */
         .hero-section {
             height: 100vh;
             display: flex;
@@ -40,49 +34,46 @@
             padding: 0 15px;
         }
 
-        /* Container do vídeo com workaround para iOS */
-        .video-container {
+        .video-background {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
             z-index: 1;
-            overflow: hidden;
-            -webkit-touch-callout: none;
-            -webkit-user-select: none;
-            user-select: none;
-        }
-
-        .video-background {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            min-width: 100%;
-            min-height: 100%;
-            width: auto;
-            height: auto;
             object-fit: cover;
             opacity: 0.7;
-            /* Workaround para iOS - torna o vídeo "invisível" para toques */
-            pointer-events: none;
-            -webkit-transform: translateZ(0);
-            transform: translateZ(0);
+            /* COMPLETAMENTE NÃO INTERATIVO */
+            pointer-events: none !important;
+            -webkit-user-select: none !important;
+            -moz-user-select: none !important;
+            user-select: none !important;
         }
 
-        /* Overlay para interceptar toques no iOS */
-        .video-touch-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 2;
-            background: transparent;
-            /* Permite que o vídeo seja visto mas toques são interceptados */
-            pointer-events: auto;
-            -webkit-tap-highlight-color: transparent;
+        /* Remove COMPLETAMENTE todos os controles do vídeo */
+        .video-background::-webkit-media-controls {
+            display: none !important;
+            -webkit-appearance: none !important;
+        }
+        
+        .video-background::-webkit-media-controls-panel {
+            display: none !important;
+        }
+        
+        .video-background::-webkit-media-controls-play-button {
+            display: none !important;
+        }
+        
+        .video-background::-webkit-media-controls-start-playback-button {
+            display: none !important;
+        }
+        
+        .video-background::-webkit-media-controls-overlay-play-button {
+            display: none !important;
+        }
+        
+        .video-background::-webkit-media-controls-enclosure {
+            display: none !important;
         }
 
         .video-overlay {
@@ -92,12 +83,12 @@
             width: 100%;
             height: 100%;
             background: linear-gradient(to bottom, rgba(0,0,0,0.95) 0%, rgba(0,20,10,0.8) 100%);
-            z-index: 3;
+            z-index: 2;
         }
 
         .hero-content {
             position: relative;
-            z-index: 4;
+            z-index: 3;
             max-width: 900px;
             width: 100%;
             padding: 0 10px;
@@ -147,7 +138,7 @@
             padding: 0 10px;
         }
 
-        /* Restante do CSS mantido igual... */
+        /* Restante do CSS permanece igual... */
         .pricing-section {
             padding: 60px 15px;
             background-color: #0a0a0a;
@@ -498,25 +489,11 @@
             font-size: clamp(0.9rem, 3.5vw, 1.1rem);
         }
 
-        /* Workaround específico para iOS */
-        @supports (-webkit-touch-callout: none) {
-            /* iOS específico */
-            .video-background {
-                -webkit-transform: translate3d(0,0,0);
-                transform: translate3d(0,0,0);
-                -webkit-backface-visibility: hidden;
-                backface-visibility: hidden;
-                -webkit-perspective: 1000;
-                perspective: 1000;
+        @media (max-width: 768px) {
+            .hero-section {
+                padding-top: 20px;
             }
             
-            .video-touch-overlay {
-                /* No iOS, este overlay intercepta todos os toques */
-                z-index: 100;
-            }
-        }
-
-        @media (max-width: 768px) {
             .process-step {
                 flex-direction: column;
                 text-align: center;
@@ -581,15 +558,12 @@
     </style>
 </head>
 <body>
-    <!-- Seção 1 - Hero -->
+    <!-- Seção 1 - Hero com Motion Video -->
     <section class="hero-section">
-        <div class="video-container">
-            <video class="video-background" autoplay muted loop playsinline preload="auto" webkit-playsinline>
-                <source src="motion.mp4" type="video/mp4">
-            </video>
-            <!-- Overlay para interceptar toques no iOS -->
-            <div class="video-touch-overlay"></div>
-        </div>
+        <video class="video-background" autoplay muted loop playsinline disableRemotePlayback disablePictureInPicture preload="auto" webkit-playsinline>
+            <source src="motion.mp4" type="video/mp4">
+            Seu navegador não suporta vídeos HTML5.
+        </video>
         <div class="video-overlay"></div>
         <div class="hero-content">
             <h1 class="hero-title">SITE INSTITUCIONAL</h1>
@@ -746,100 +720,131 @@
     </footer>
 
     <script>
+        // CONFIGURAÇÃO DO VÍDEO 100% AUTOMÁTICO - SEM BOTÕES
         document.addEventListener('DOMContentLoaded', function() {
             const video = document.querySelector('.video-background');
-            const touchOverlay = document.querySelector('.video-touch-overlay');
             
-            // Detecta iOS
-            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-            
-            // Configuração básica do vídeo
+            // 1. CONFIGURAÇÕES BÁSICAS PARA AUTOPLAY
             video.autoplay = true;
             video.muted = true;
             video.loop = true;
             video.playsInline = true;
-            video.controls = false;
+            video.setAttribute('webkit-playsinline', '');
+            video.setAttribute('playsinline', '');
+            video.setAttribute('muted', '');
+            video.setAttribute('autoplay', '');
             
-            // Remove qualquer atributo de controle
+            // 2. REMOVE QUALQUER CONTROLE
+            video.controls = false;
             video.removeAttribute('controls');
             
-            // Tenta iniciar o vídeo
+            // 3. IMPEDE QUALQUER INTERAÇÃO
+            video.style.pointerEvents = 'none';
+            video.style.userSelect = 'none';
+            video.style.webkitUserSelect = 'none';
+            
+            // 4. TENTA INICIAR O VÍDEO IMEDIATAMENTE
             function startVideo() {
                 if (video.paused) {
                     const playPromise = video.play();
                     
                     if (playPromise !== undefined) {
                         playPromise.catch(error => {
-                            console.log('Autoplay bloqueado, tentando estratégias...');
-                            
-                            // Estratégia para iOS: user gesture required
-                            if (isIOS) {
-                                // No iOS, precisamos de um gesto do usuário
-                                // Vamos simular isso com um toque no overlay
-                                touchOverlay.style.cursor = 'pointer';
-                                touchOverlay.title = 'Toque para iniciar o vídeo';
-                                
-                                touchOverlay.addEventListener('click', function initVideo() {
-                                    video.play().then(() => {
-                                        console.log('Vídeo iniciado após toque no iOS');
-                                        // Remove o evento após o primeiro toque
-                                        touchOverlay.removeEventListener('click', initVideo);
-                                        touchOverlay.style.cursor = 'default';
-                                    }).catch(e => {
-                                        console.log('Falha mesmo após toque:', e);
-                                    });
-                                }, { once: true });
-                            } else {
-                                // Para outros dispositivos, tenta novamente
-                                setTimeout(() => {
-                                    video.muted = true;
-                                    video.play().catch(e => {
-                                        console.log('Não foi possível iniciar o vídeo:', e);
-                                    });
-                                }, 1000);
-                            }
+                            // Se falhar, tenta de novo silenciosamente
+                            console.log('Tentando estratégia alternativa...');
+                            video.muted = true;
+                            video.play().catch(e => {
+                                console.log('Vídeo não iniciou automaticamente:', e);
+                            });
                         });
                     }
                 }
             }
             
-            // Inicia o vídeo
+            // 5. VÁRIAS TENTATIVAS DE INICIAR
             startVideo();
             
-            // Se o vídeo pausar, tenta reiniciar (exceto no iOS onde precisa de interação)
+            // Tenta quando o vídeo estiver carregado
+            video.addEventListener('loadeddata', startVideo);
+            
+            // Tenta múltiplas vezes
+            setTimeout(startVideo, 100);
+            setTimeout(startVideo, 500);
+            setTimeout(startVideo, 1000);
+            setTimeout(startVideo, 2000);
+            
+            // 6. SE O VÍDEO PAUSAR, REINICIA AUTOMATICAMENTE
             video.addEventListener('pause', function() {
-                if (!isIOS) {
-                    setTimeout(startVideo, 100);
+                console.log('Vídeo pausado - reiniciando...');
+                setTimeout(startVideo, 10);
+            });
+            
+            // 7. IMPEDE QUE O USUÁRIO INTERAJA COM O VÍDEO
+            video.addEventListener('touchstart', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                e.stopImmediatePropagation();
+                return false;
+            }, { passive: false, capture: true });
+            
+            video.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                e.stopImmediatePropagation();
+                return false;
+            }, { capture: true });
+            
+            // 8. QUANDO A PÁGINA GANHA FOCO, TENTA REINICIAR
+            window.addEventListener('focus', function() {
+                if (video.paused) {
+                    startVideo();
                 }
             });
             
-            // Overlay para interceptar toques (especialmente iOS)
-            touchOverlay.addEventListener('touchstart', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
+            // 9. FALLBACK SE O VÍDEO NÃO CARREGAR
+            video.addEventListener('error', function() {
+                console.log('Vídeo não carregou - usando fallback...');
+                video.style.display = 'none';
                 
-                // No iOS, um toque pode ser necessário para autoplay
-                if (isIOS && video.paused) {
-                    video.play().catch(() => {
-                        // Se falhar, tenta com mute
-                        video.muted = true;
-                        video.play();
+                // Cria animação de fallback
+                const fallback = document.createElement('div');
+                fallback.style.position = 'absolute';
+                fallback.style.top = '0';
+                fallback.style.left = '0';
+                fallback.style.width = '100%';
+                fallback.style.height = '100%';
+                fallback.style.zIndex = '1';
+                fallback.style.background = 'linear-gradient(45deg, #001a0d, #000, #001a0d)';
+                
+                document.querySelector('.hero-section').prepend(fallback);
+                
+                // Adiciona partículas
+                for (let i = 0; i < 20; i++) {
+                    const particle = document.createElement('div');
+                    particle.style.position = 'absolute';
+                    particle.style.width = Math.random() * 4 + 2 + 'px';
+                    particle.style.height = particle.style.width;
+                    particle.style.background = i % 2 === 0 ? '#00ff88' : '#00ccff';
+                    particle.style.borderRadius = '50%';
+                    particle.style.opacity = Math.random() * 0.5 + 0.1;
+                    particle.style.left = Math.random() * 100 + 'vw';
+                    particle.style.top = Math.random() * 100 + 'vh';
+                    
+                    fallback.appendChild(particle);
+                    
+                    // Anima a partícula
+                    const anim = particle.animate([
+                        { transform: 'translate(0, 0)', opacity: particle.style.opacity },
+                        { transform: `translate(${Math.random() * 100 - 50}vw, ${Math.random() * 100 - 50}vh)`, opacity: 0 }
+                    ], {
+                        duration: Math.random() * 15000 + 10000,
+                        iterations: Infinity,
+                        direction: 'alternate'
                     });
                 }
-            }, { passive: false });
-            
-            touchOverlay.addEventListener('click', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
             });
             
-            // Previne o menu de contexto no vídeo
-            video.addEventListener('contextmenu', function(e) {
-                e.preventDefault();
-                return false;
-            });
-            
-            // Animações ao rolar
+            // 10. ANIMAÇÃO AO ROLAR A PÁGINA
             const observer = new IntersectionObserver(function(entries) {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
@@ -851,32 +856,15 @@
             document.querySelectorAll('.section-title, .price-container, .benefit-card, .process-step, .guarantee-container').forEach(el => {
                 observer.observe(el);
             });
-            
-            // Corrige barra de rolagem lateral
-            function fixHorizontalScroll() {
-                document.body.style.overflowX = 'hidden';
-                document.documentElement.style.overflowX = 'hidden';
-                
-                // Verifica elementos largos
-                document.querySelectorAll('*').forEach(el => {
-                    const rect = el.getBoundingClientRect();
-                    if (rect.width > window.innerWidth) {
-                        el.style.maxWidth = '100%';
-                        el.style.overflowX = 'hidden';
-                    }
-                });
-            }
-            
-            fixHorizontalScroll();
-            window.addEventListener('resize', fixHorizontalScroll);
-            
-            // Verifica periodicamente se o vídeo está rodando
-            setInterval(() => {
-                if (!isIOS && video.paused) {
-                    startVideo();
-                }
-            }, 3000);
         });
+        
+        // ESTRATÉGIA EXTRA: REINICIA O VÍDEO PERIODICAMENTE
+        setInterval(() => {
+            const video = document.querySelector('.video-background');
+            if (video && video.paused) {
+                video.play().catch(() => {});
+            }
+        }, 3000);
     </script>
 </body>
 </html>
