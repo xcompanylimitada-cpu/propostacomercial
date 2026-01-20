@@ -6,7 +6,6 @@
     <title>Proposta Comercial | Site Institucional</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* RESET COMPLETO - REMOVE TUDO */
         * {
             margin: 0;
             padding: 0;
@@ -16,7 +15,7 @@
         html, body {
             width: 100%;
             height: 100%;
-            overflow-x: hidden !important; /* IMPEDE BARRA LATERAL */
+            overflow-x: hidden;
         }
 
         body {
@@ -24,18 +23,11 @@
             background-color: #000;
             color: #fff;
             line-height: 1.6;
-            overflow-x: hidden !important;
+            overflow-x: hidden;
             -webkit-text-size-adjust: 100%;
-            max-width: 100vw; /* GARANTE QUE NÃO VAI ULTRAPASSAR */
         }
 
-        /* REMOVE SCROLLBAR MAS MANTÉM FUNCIONALIDADE */
-        body::-webkit-scrollbar {
-            width: 0px;
-            background: transparent;
-        }
-
-        /* Seção 1 - Hero com Motion */
+        /* Seção 1 - Hero */
         .hero-section {
             height: 100vh;
             display: flex;
@@ -44,12 +36,11 @@
             align-items: center;
             text-align: center;
             position: relative;
-            overflow: hidden !important;
+            overflow: hidden;
             padding: 0 15px;
-            width: 100vw;
-            max-width: 100%;
         }
 
+        /* Vídeo para desktop, canvas para mobile */
         .video-background {
             position: absolute;
             top: 0;
@@ -59,35 +50,28 @@
             z-index: 1;
             object-fit: cover;
             opacity: 0.7;
-            /* COMPLETAMENTE NÃO INTERATIVO */
-            pointer-events: none !important;
-            -webkit-user-select: none !important;
-            -moz-user-select: none !important;
-            user-select: none !important;
-            /* REMOVE CONTROLES VISUAIS */
-            -webkit-touch-callout: none;
-            -webkit-user-drag: none;
         }
 
-        /* REMOVE COMPLETAMENTE TODOS OS CONTROLES DO VÍDEO */
-        .video-background::-webkit-media-controls {
-            display: none !important;
+        /* EM MOBILE: substitui o vídeo por canvas */
+        @media (max-width: 768px) {
+            .video-background {
+                display: none !important; /* Esconde vídeo no mobile */
+            }
+            
+            .canvas-background {
+                display: block !important; /* Mostra canvas no mobile */
+            }
         }
-        
-        .video-background::-webkit-media-controls-panel {
-            display: none !important;
-        }
-        
-        .video-background::-webkit-media-controls-play-button {
-            display: none !important;
-        }
-        
-        .video-background::-webkit-media-controls-start-playback-button {
-            display: none !important;
-        }
-        
-        .video-background::-webkit-media-controls-overlay-play-button {
-            display: none !important;
+
+        .canvas-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            opacity: 0.7;
+            display: none; /* Escondido por padrão */
         }
 
         .video-overlay {
@@ -152,24 +136,10 @@
             padding: 0 10px;
         }
 
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* Seção de Preços */
+        /* Restante do CSS (igual ao anterior) */
         .pricing-section {
             padding: 60px 15px;
             background-color: #0a0a0a;
-            width: 100%;
-            max-width: 100vw;
-            overflow: hidden !important;
         }
 
         .section-title {
@@ -179,7 +149,6 @@
             color: #00ff88;
             opacity: 0;
             padding: 0 10px;
-            width: 100%;
         }
 
         .section-title.animate {
@@ -202,8 +171,6 @@
             box-shadow: 0 10px 30px rgba(0, 255, 136, 0.15);
             opacity: 0;
             transform: translateY(30px);
-            width: 100%;
-            overflow: hidden !important;
         }
 
         .price-container.animate {
@@ -222,7 +189,6 @@
             margin-bottom: 30px;
             padding-bottom: 20px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            width: 100%;
         }
 
         .price-label {
@@ -237,7 +203,6 @@
             flex-direction: column;
             align-items: center;
             margin-bottom: 15px;
-            width: 100%;
         }
 
         .original-price-text {
@@ -282,7 +247,6 @@
         .final-price-section {
             text-align: center;
             margin: 30px 0;
-            width: 100%;
         }
 
         .final-price {
@@ -301,7 +265,6 @@
 
         .price-details {
             margin-top: 30px;
-            width: 100%;
         }
 
         .detail-item {
@@ -312,7 +275,6 @@
             font-size: clamp(1rem, 3.5vw, 1.3rem);
             padding: 10px 0;
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-            width: 100%;
         }
 
         .detail-item:last-child {
@@ -327,13 +289,9 @@
             text-align: center;
         }
 
-        /* Seção de Benefícios */
         .benefits-section {
             padding: 60px 15px;
             background-color: #050505;
-            width: 100%;
-            max-width: 100vw;
-            overflow: hidden !important;
         }
 
         .benefits-container {
@@ -342,7 +300,6 @@
             gap: 25px;
             max-width: 1200px;
             margin: 0 auto;
-            width: 100%;
         }
 
         .benefit-card {
@@ -354,8 +311,6 @@
             transition: all 0.3s ease;
             opacity: 0;
             transform: translateY(30px);
-            width: 100%;
-            overflow: hidden !important;
         }
 
         .benefit-card.animate {
@@ -390,20 +345,15 @@
             line-height: 1.5;
         }
 
-        /* Seção do Processo */
         .process-section {
             padding: 60px 15px;
             background-color: #0a0a0a;
-            width: 100%;
-            max-width: 100vw;
-            overflow: hidden !important;
         }
 
         .process-container {
             max-width: 1000px;
             margin: 0 auto;
             position: relative;
-            width: 100%;
         }
 
         .process-step {
@@ -412,7 +362,6 @@
             margin-bottom: 40px;
             opacity: 0;
             transform: translateX(-30px);
-            width: 100%;
         }
 
         .process-step.animate {
@@ -465,7 +414,6 @@
             border-radius: 12px;
             border-left: 3px solid #00ff88;
             flex-grow: 1;
-            width: 100%;
         }
 
         .process-step:nth-child(even) .step-content {
@@ -485,14 +433,10 @@
             line-height: 1.5;
         }
 
-        /* Seção de Garantia */
         .guarantee-section {
             padding: 60px 15px;
             background-color: #050505;
             text-align: center;
-            width: 100%;
-            max-width: 100vw;
-            overflow: hidden !important;
         }
 
         .guarantee-container {
@@ -504,8 +448,6 @@
             border: 1px solid rgba(0, 255, 136, 0.2);
             opacity: 0;
             transform: translateY(30px);
-            width: 100%;
-            overflow: hidden !important;
         }
 
         .guarantee-container.animate {
@@ -530,7 +472,6 @@
             line-height: 1.6;
         }
 
-        /* Rodapé */
         .footer {
             text-align: center;
             padding: 40px 15px;
@@ -538,9 +479,6 @@
             color: #777;
             font-size: clamp(0.85rem, 3vw, 1rem);
             border-top: 1px solid rgba(255, 255, 255, 0.05);
-            width: 100%;
-            max-width: 100vw;
-            overflow: hidden !important;
         }
 
         .footer-highlight {
@@ -549,20 +487,7 @@
             font-size: clamp(0.9rem, 3.5vw, 1.1rem);
         }
 
-        /* Garante que nada ultrapassa a largura */
-        * {
-            max-width: 100vw;
-        }
-
-        img, video {
-            max-width: 100%;
-        }
-
         @media (max-width: 768px) {
-            .hero-section {
-                padding-top: 20px;
-            }
-            
             .process-step {
                 flex-direction: column;
                 text-align: center;
@@ -624,28 +549,19 @@
                 padding: 25px 15px;
             }
         }
-
-        /* REMOVE QUALQUER OVERLAY DE PLAY */
-        .play-overlay {
-            display: none !important;
-        }
-        
-        .play-button {
-            display: none !important;
-        }
-        
-        [class*="play"] {
-            display: none !important;
-        }
     </style>
 </head>
 <body>
-    <!-- Seção 1 - Hero com Motion Video -->
+    <!-- Seção 1 - Hero -->
     <section class="hero-section">
-        <video class="video-background" autoplay muted loop playsinline preload="auto" webkit-playsinline>
+        <!-- Vídeo para desktop -->
+        <video class="video-background" autoplay muted loop playsinline preload="auto">
             <source src="motion.mp4" type="video/mp4">
-            <!-- Se o vídeo falhar, mostra fallback -->
         </video>
+        
+        <!-- Canvas para mobile (sem botões) -->
+        <canvas class="canvas-background"></canvas>
+        
         <div class="video-overlay"></div>
         <div class="hero-content">
             <h1 class="hero-title">SITE INSTITUCIONAL</h1>
@@ -802,48 +718,111 @@
     </footer>
 
     <script>
-        // CÓDIGO SIMPLIFICADO - SEM BOTÕES, SEM OVERLAYS
         document.addEventListener('DOMContentLoaded', function() {
+            // Detecta se é mobile
+            const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+            
+            // Elementos
             const video = document.querySelector('.video-background');
+            const canvas = document.querySelector('.canvas-background');
+            const ctx = canvas.getContext('2d');
             
-            // CONFIGURAÇÃO BÁSICA DO VÍDEO
-            video.autoplay = true;
-            video.muted = true;
-            video.loop = true;
-            video.playsInline = true;
-            video.controls = false;
-            
-            // REMOVE QUALQUER ATRIBUTO DE CONTROLE
-            video.removeAttribute('controls');
-            
-            // TENTA INICIAR O VÍDEO
-            function startVideo() {
-                if (video.paused) {
-                    video.play().catch(function(e) {
-                        console.log('Autoplay bloqueado, tentando novamente...');
-                        // Se falhar, tenta novamente depois de um tempo
-                        setTimeout(startVideo, 1000);
+            // SE FOR MOBILE: usa canvas em vez de vídeo
+            if (isMobile) {
+                console.log('Mobile detectado - usando canvas em vez de vídeo');
+                
+                // Esconde vídeo, mostra canvas
+                video.style.display = 'none';
+                canvas.style.display = 'block';
+                
+                // Configura tamanho do canvas
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+                
+                // Cria animação no canvas (efeito futurista)
+                function drawCanvasAnimation() {
+                    // Fundo escuro
+                    ctx.fillStyle = '#000';
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+                    
+                    // Gradiente central
+                    const gradient = ctx.createRadialGradient(
+                        canvas.width / 2, canvas.height / 2, 0,
+                        canvas.width / 2, canvas.height / 2, Math.min(canvas.width, canvas.height) / 2
+                    );
+                    gradient.addColorStop(0, 'rgba(0, 255, 136, 0.3)');
+                    gradient.addColorStop(0.5, 'rgba(0, 204, 255, 0.2)');
+                    gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
+                    
+                    ctx.fillStyle = gradient;
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+                    
+                    // Partículas
+                    const time = Date.now() * 0.001;
+                    
+                    for (let i = 0; i < 30; i++) {
+                        const x = (Math.sin(time * 0.5 + i * 0.5) * 0.5 + 0.5) * canvas.width;
+                        const y = (Math.cos(time * 0.3 + i * 0.7) * 0.5 + 0.5) * canvas.height;
+                        const size = Math.sin(time + i) * 3 + 4;
+                        
+                        ctx.beginPath();
+                        ctx.arc(x, y, size, 0, Math.PI * 2);
+                        ctx.fillStyle = i % 3 === 0 ? '#00ff88' : (i % 3 === 1 ? '#00ccff' : '#ffffff');
+                        ctx.globalAlpha = 0.6;
+                        ctx.fill();
+                        ctx.globalAlpha = 1.0;
+                    }
+                    
+                    // Linhas conectando partículas
+                    ctx.strokeStyle = 'rgba(0, 255, 136, 0.3)';
+                    ctx.lineWidth = 1;
+                    
+                    for (let i = 0; i < 10; i++) {
+                        const x1 = (Math.sin(time * 0.4 + i) * 0.5 + 0.5) * canvas.width;
+                        const y1 = (Math.cos(time * 0.4 + i) * 0.5 + 0.5) * canvas.height;
+                        const x2 = (Math.sin(time * 0.6 + i + 5) * 0.5 + 0.5) * canvas.width;
+                        const y2 = (Math.cos(time * 0.6 + i + 5) * 0.5 + 0.5) * canvas.height;
+                        
+                        ctx.beginPath();
+                        ctx.moveTo(x1, y1);
+                        ctx.lineTo(x2, y2);
+                        ctx.stroke();
+                    }
+                    
+                    requestAnimationFrame(drawCanvasAnimation);
+                }
+                
+                // Inicia animação do canvas
+                drawCanvasAnimation();
+                
+                // Ajusta canvas quando redimensionar
+                window.addEventListener('resize', function() {
+                    canvas.width = window.innerWidth;
+                    canvas.height = window.innerHeight;
+                });
+                
+            } else {
+                // SE FOR DESKTOP: usa vídeo normal
+                console.log('Desktop detectado - usando vídeo');
+                
+                // Configura vídeo para autoplay
+                video.autoplay = true;
+                video.muted = true;
+                video.loop = true;
+                video.playsInline = true;
+                video.controls = false;
+                
+                // Tenta iniciar
+                const playPromise = video.play();
+                if (playPromise !== undefined) {
+                    playPromise.catch(() => {
+                        video.muted = true;
+                        video.play();
                     });
                 }
             }
             
-            // INICIA O VÍDEO
-            startVideo();
-            
-            // SE O VÍDEO PAUSAR, REINICIA
-            video.addEventListener('pause', function() {
-                setTimeout(startVideo, 100);
-            });
-            
-            // REMOVE QUALQUER ELEMENTO QUE POSSA SER BOTÃO DE PLAY
-            document.querySelectorAll('[class*="play"], [class*="Play"], [id*="play"], [id*="Play"]').forEach(el => {
-                if (el.tagName !== 'VIDEO') {
-                    el.style.display = 'none';
-                    el.remove();
-                }
-            });
-            
-            // ANIMAÇÃO AO ROLAR
+            // Animações ao rolar
             const observer = new IntersectionObserver(function(entries) {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
@@ -856,72 +835,16 @@
                 observer.observe(el);
             });
             
-            // CORREÇÃO DA BARRA DE ROLAGEM LATERAL
+            // Corrige barra de rolagem lateral
             function fixHorizontalScroll() {
-                // Verifica se há barra de rolagem horizontal
+                document.body.style.overflowX = 'hidden';
                 if (document.documentElement.scrollWidth > window.innerWidth) {
-                    // Ajusta elementos que podem estar causando o problema
-                    document.querySelectorAll('*').forEach(el => {
-                        const style = window.getComputedStyle(el);
-                        if (parseFloat(style.width) > window.innerWidth) {
-                            el.style.maxWidth = '100vw';
-                            el.style.overflowX = 'hidden';
-                        }
-                    });
-                    
-                    // Força o body a não ultrapassar
-                    document.body.style.overflowX = 'hidden';
-                    document.body.style.maxWidth = '100vw';
+                    document.documentElement.style.overflowX = 'hidden';
                 }
             }
             
-            // Executa a correção
             fixHorizontalScroll();
             window.addEventListener('resize', fixHorizontalScroll);
-            window.addEventListener('load', fixHorizontalScroll);
-            
-            // Monitora periodicamente
-            setInterval(fixHorizontalScroll, 1000);
-        });
-        
-        // GARANTE QUE O VÍDEO CONTINUE RODANDO
-        setInterval(() => {
-            const video = document.querySelector('.video-background');
-            if (video && video.paused) {
-                video.play().catch(() => {});
-            }
-        }, 3000);
-        
-        // REMOVE QUALQUER BOTÃO CRIADO DINAMICAMENTE
-        const observer = new MutationObserver(function(mutations) {
-            mutations.forEach(function(mutation) {
-                mutation.addedNodes.forEach(function(node) {
-                    if (node.nodeType === 1) { // Element node
-                        if (node.className && (node.className.includes('play') || node.className.includes('Play'))) {
-                            node.style.display = 'none';
-                            node.remove();
-                        }
-                        if (node.id && (node.id.includes('play') || node.id.includes('Play'))) {
-                            node.style.display = 'none';
-                            node.remove();
-                        }
-                        // Verifica elementos filhos
-                        if (node.querySelectorAll) {
-                            node.querySelectorAll('[class*="play"], [class*="Play"], [id*="play"], [id*="Play"]').forEach(el => {
-                                if (el.tagName !== 'VIDEO') {
-                                    el.style.display = 'none';
-                                    el.remove();
-                                }
-                            });
-                        }
-                    }
-                });
-            });
-        });
-        
-        observer.observe(document.body, {
-            childList: true,
-            subtree: true
         });
     </script>
 </body>
