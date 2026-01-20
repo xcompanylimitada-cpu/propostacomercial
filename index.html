@@ -43,13 +43,17 @@
             z-index: 1;
             object-fit: cover;
             opacity: 0.7;
-            /* Garante que o vídeo não mostre controles em nenhum dispositivo */
-            pointer-events: none; /* Impede qualquer interação com o vídeo */
+            /* COMPLETAMENTE NÃO INTERATIVO */
+            pointer-events: none !important;
+            -webkit-user-select: none !important;
+            -moz-user-select: none !important;
+            user-select: none !important;
         }
 
-        /* Remove completamente todos os controles do vídeo */
+        /* Remove COMPLETAMENTE todos os controles do vídeo */
         .video-background::-webkit-media-controls {
             display: none !important;
+            -webkit-appearance: none !important;
         }
         
         .video-background::-webkit-media-controls-panel {
@@ -65,6 +69,10 @@
         }
         
         .video-background::-webkit-media-controls-overlay-play-button {
+            display: none !important;
+        }
+        
+        .video-background::-webkit-media-controls-enclosure {
             display: none !important;
         }
 
@@ -130,18 +138,7 @@
             padding: 0 10px;
         }
 
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* Seção de Preços */
+        /* Restante do CSS permanece igual... */
         .pricing-section {
             padding: 60px 15px;
             background-color: #0a0a0a;
@@ -294,7 +291,6 @@
             text-align: center;
         }
 
-        /* Seção de Benefícios */
         .benefits-section {
             padding: 60px 15px;
             background-color: #050505;
@@ -351,7 +347,6 @@
             line-height: 1.5;
         }
 
-        /* Seção do Processo */
         .process-section {
             padding: 60px 15px;
             background-color: #0a0a0a;
@@ -440,7 +435,6 @@
             line-height: 1.5;
         }
 
-        /* Seção de Garantia */
         .guarantee-section {
             padding: 60px 15px;
             background-color: #050505;
@@ -480,7 +474,6 @@
             line-height: 1.6;
         }
 
-        /* Rodapé */
         .footer {
             text-align: center;
             padding: 40px 15px;
@@ -496,7 +489,6 @@
             font-size: clamp(0.9rem, 3.5vw, 1.1rem);
         }
 
-        /* Otimizações específicas para mobile */
         @media (max-width: 768px) {
             .hero-section {
                 padding-top: 20px;
@@ -568,7 +560,7 @@
 <body>
     <!-- Seção 1 - Hero com Motion Video -->
     <section class="hero-section">
-        <video class="video-background" autoplay muted loop playsinline disableRemotePlayback disablePictureInPicture preload="auto">
+        <video class="video-background" autoplay muted loop playsinline disableRemotePlayback disablePictureInPicture preload="auto" webkit-playsinline>
             <source src="motion.mp4" type="video/mp4">
             Seu navegador não suporta vídeos HTML5.
         </video>
@@ -728,168 +720,151 @@
     </footer>
 
     <script>
+        // CONFIGURAÇÃO DO VÍDEO 100% AUTOMÁTICO - SEM BOTÕES
         document.addEventListener('DOMContentLoaded', function() {
-            // Configuração do vídeo para rodar automaticamente SEM BOTÕES
             const video = document.querySelector('.video-background');
             
-            // Configurações ESSENCIAIS para autoplay em todos dispositivos
-            video.setAttribute('autoplay', '');
-            video.setAttribute('muted', '');
-            video.setAttribute('loop', '');
+            // 1. CONFIGURAÇÕES BÁSICAS PARA AUTOPLAY
+            video.autoplay = true;
+            video.muted = true;
+            video.loop = true;
+            video.playsInline = true;
+            video.setAttribute('webkit-playsinline', '');
             video.setAttribute('playsinline', '');
-            video.setAttribute('disableRemotePlayback', '');
-            video.setAttribute('disablePictureInPicture', '');
-            video.setAttribute('preload', 'auto');
+            video.setAttribute('muted', '');
+            video.setAttribute('autoplay', '');
             
-            // Remove COMPLETAMENTE qualquer controle
-            video.removeAttribute('controls');
+            // 2. REMOVE QUALQUER CONTROLE
             video.controls = false;
+            video.removeAttribute('controls');
             
-            // Tenta forçar o autoplay com várias estratégias
-            function forceVideoAutoplay() {
+            // 3. IMPEDE QUALQUER INTERAÇÃO
+            video.style.pointerEvents = 'none';
+            video.style.userSelect = 'none';
+            video.style.webkitUserSelect = 'none';
+            
+            // 4. TENTA INICIAR O VÍDEO IMEDIATAMENTE
+            function startVideo() {
                 if (video.paused) {
-                    // Estratégia 1: Tentar play normalmente
                     const playPromise = video.play();
                     
                     if (playPromise !== undefined) {
-                        playPromise.then(() => {
-                            console.log('Vídeo iniciado com sucesso');
-                        }).catch(error => {
-                            console.log('Autoplay bloqueado, tentando estratégias alternativas:', error);
-                            
-                            // Estratégia 2: Mute e tenta novamente (já está muted)
+                        playPromise.catch(error => {
+                            // Se falhar, tenta de novo silenciosamente
+                            console.log('Tentando estratégia alternativa...');
                             video.muted = true;
                             video.play().catch(e => {
-                                console.log('Segunda tentativa falhou:', e);
-                                
-                                // Estratégia 3: Adiciona listener para primeiro user interaction
-                                document.addEventListener('click', function startVideoOnInteraction() {
-                                    video.play().then(() => {
-                                        console.log('Vídeo iniciado após interação do usuário');
-                                        document.removeEventListener('click', startVideoOnInteraction);
-                                    }).catch(e => {
-                                        console.log('Falha após interação:', e);
-                                    });
-                                }, { once: true });
+                                console.log('Vídeo não iniciou automaticamente:', e);
                             });
                         });
                     }
                 }
             }
             
-            // Tenta iniciar o vídeo quando ele estiver carregado
-            video.addEventListener('loadeddata', forceVideoAutoplay);
+            // 5. VÁRIAS TENTATIVAS DE INICIAR
+            startVideo();
             
-            // Tenta iniciar imediatamente e depois periodicamente
-            setTimeout(forceVideoAutoplay, 100);
-            setTimeout(forceVideoAutoplay, 1000);
-            setTimeout(forceVideoAutoplay, 3000);
+            // Tenta quando o vídeo estiver carregado
+            video.addEventListener('loadeddata', startVideo);
             
-            // Monitora se o vídeo parar e tenta reiniciar
+            // Tenta múltiplas vezes
+            setTimeout(startVideo, 100);
+            setTimeout(startVideo, 500);
+            setTimeout(startVideo, 1000);
+            setTimeout(startVideo, 2000);
+            
+            // 6. SE O VÍDEO PAUSAR, REINICIA AUTOMATICAMENTE
             video.addEventListener('pause', function() {
-                console.log('Vídeo pausado, tentando reiniciar...');
-                setTimeout(forceVideoAutoplay, 100);
+                console.log('Vídeo pausado - reiniciando...');
+                setTimeout(startVideo, 10);
             });
             
-            // Previne qualquer interação com o vídeo
+            // 7. IMPEDE QUE O USUÁRIO INTERAJA COM O VÍDEO
             video.addEventListener('touchstart', function(e) {
                 e.preventDefault();
                 e.stopPropagation();
-            }, { passive: false });
+                e.stopImmediatePropagation();
+                return false;
+            }, { passive: false, capture: true });
             
             video.addEventListener('click', function(e) {
                 e.preventDefault();
                 e.stopPropagation();
+                e.stopImmediatePropagation();
+                return false;
+            }, { capture: true });
+            
+            // 8. QUANDO A PÁGINA GANHA FOCO, TENTA REINICIAR
+            window.addEventListener('focus', function() {
+                if (video.paused) {
+                    startVideo();
+                }
             });
             
-            // Fallback para o vídeo caso não carregue
+            // 9. FALLBACK SE O VÍDEO NÃO CARREGAR
             video.addEventListener('error', function() {
-                console.log('Erro ao carregar o vídeo motion.mp4, usando fallback...');
-                // Criar fallback com animação CSS
+                console.log('Vídeo não carregou - usando fallback...');
                 video.style.display = 'none';
-                const motionCanvas = document.createElement('div');
-                motionCanvas.className = 'motion-fallback';
-                motionCanvas.style.position = 'absolute';
-                motionCanvas.style.top = '0';
-                motionCanvas.style.left = '0';
-                motionCanvas.style.width = '100%';
-                motionCanvas.style.height = '100%';
-                motionCanvas.style.zIndex = '1';
-                motionCanvas.style.background = 'linear-gradient(45deg, #001a0d 0%, #000 50%, #001a0d 100%)';
                 
-                const heroSection = document.querySelector('.hero-section');
-                heroSection.insertBefore(motionCanvas, heroSection.firstChild);
+                // Cria animação de fallback
+                const fallback = document.createElement('div');
+                fallback.style.position = 'absolute';
+                fallback.style.top = '0';
+                fallback.style.left = '0';
+                fallback.style.width = '100%';
+                fallback.style.height = '100%';
+                fallback.style.zIndex = '1';
+                fallback.style.background = 'linear-gradient(45deg, #001a0d, #000, #001a0d)';
                 
-                // Adicionar animação de partículas como fallback
-                createParticlesFallback(motionCanvas);
-            });
-            
-            function createParticlesFallback(container) {
-                for (let i = 0; i < 30; i++) {
+                document.querySelector('.hero-section').prepend(fallback);
+                
+                // Adiciona partículas
+                for (let i = 0; i < 20; i++) {
                     const particle = document.createElement('div');
                     particle.style.position = 'absolute';
                     particle.style.width = Math.random() * 4 + 2 + 'px';
                     particle.style.height = particle.style.width;
-                    particle.style.backgroundColor = i % 3 === 0 ? '#00ff88' : (i % 3 === 1 ? '#00ccff' : '#ffffff');
+                    particle.style.background = i % 2 === 0 ? '#00ff88' : '#00ccff';
                     particle.style.borderRadius = '50%';
                     particle.style.opacity = Math.random() * 0.5 + 0.1;
                     particle.style.left = Math.random() * 100 + 'vw';
                     particle.style.top = Math.random() * 100 + 'vh';
                     
-                    container.appendChild(particle);
+                    fallback.appendChild(particle);
                     
-                    // Animar partícula
-                    animateParticle(particle);
+                    // Anima a partícula
+                    const anim = particle.animate([
+                        { transform: 'translate(0, 0)', opacity: particle.style.opacity },
+                        { transform: `translate(${Math.random() * 100 - 50}vw, ${Math.random() * 100 - 50}vh)`, opacity: 0 }
+                    ], {
+                        duration: Math.random() * 15000 + 10000,
+                        iterations: Infinity,
+                        direction: 'alternate'
+                    });
                 }
-            }
+            });
             
-            function animateParticle(particle) {
-                const duration = Math.random() * 20 + 10;
-                const xMovement = Math.random() * 100 - 50;
-                const yMovement = Math.random() * 100 - 50;
-                
-                const keyframes = [
-                    { transform: 'translate(0, 0)', opacity: parseFloat(particle.style.opacity) },
-                    { transform: `translate(${xMovement}vw, ${yMovement}vh)`, opacity: 0 }
-                ];
-                
-                const options = {
-                    duration: duration * 1000,
-                    iterations: Infinity,
-                    direction: 'alternate',
-                    easing: 'ease-in-out'
-                };
-                
-                particle.animate(keyframes, options);
-            }
-            
-            // Animação ao rolar a página
-            const observerOptions = {
-                threshold: 0.1,
-                rootMargin: '0px 0px -50px 0px'
-            };
-            
+            // 10. ANIMAÇÃO AO ROLAR A PÁGINA
             const observer = new IntersectionObserver(function(entries) {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
                         entry.target.classList.add('animate');
                     }
                 });
-            }, observerOptions);
+            }, { threshold: 0.1 });
             
-            // Observar elementos para animação
             document.querySelectorAll('.section-title, .price-container, .benefit-card, .process-step, .guarantee-container').forEach(el => {
                 observer.observe(el);
             });
         });
         
-        // Estratégia adicional: Tenta dar play no vídeo quando a página ganha foco
-        window.addEventListener('focus', function() {
+        // ESTRATÉGIA EXTRA: REINICIA O VÍDEO PERIODICAMENTE
+        setInterval(() => {
             const video = document.querySelector('.video-background');
             if (video && video.paused) {
-                video.play().catch(e => console.log('Não foi possível retomar o vídeo:', e));
+                video.play().catch(() => {});
             }
-        });
+        }, 3000);
     </script>
 </body>
 </html>
