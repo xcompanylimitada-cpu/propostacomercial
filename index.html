@@ -6,10 +6,17 @@
     <title>Proposta Comercial | Site Institucional</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        /* RESET COMPLETO - REMOVE TUDO */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow-x: hidden !important; /* IMPEDE BARRA LATERAL */
         }
 
         body {
@@ -17,8 +24,15 @@
             background-color: #000;
             color: #fff;
             line-height: 1.6;
-            overflow-x: hidden;
+            overflow-x: hidden !important;
             -webkit-text-size-adjust: 100%;
+            max-width: 100vw; /* GARANTE QUE NÃO VAI ULTRAPASSAR */
+        }
+
+        /* REMOVE SCROLLBAR MAS MANTÉM FUNCIONALIDADE */
+        body::-webkit-scrollbar {
+            width: 0px;
+            background: transparent;
         }
 
         /* Seção 1 - Hero com Motion */
@@ -30,8 +44,10 @@
             align-items: center;
             text-align: center;
             position: relative;
-            overflow: hidden;
+            overflow: hidden !important;
             padding: 0 15px;
+            width: 100vw;
+            max-width: 100%;
         }
 
         .video-background {
@@ -48,12 +64,14 @@
             -webkit-user-select: none !important;
             -moz-user-select: none !important;
             user-select: none !important;
+            /* REMOVE CONTROLES VISUAIS */
+            -webkit-touch-callout: none;
+            -webkit-user-drag: none;
         }
 
-        /* Remove COMPLETAMENTE todos os controles do vídeo */
+        /* REMOVE COMPLETAMENTE TODOS OS CONTROLES DO VÍDEO */
         .video-background::-webkit-media-controls {
             display: none !important;
-            -webkit-appearance: none !important;
         }
         
         .video-background::-webkit-media-controls-panel {
@@ -69,10 +87,6 @@
         }
         
         .video-background::-webkit-media-controls-overlay-play-button {
-            display: none !important;
-        }
-        
-        .video-background::-webkit-media-controls-enclosure {
             display: none !important;
         }
 
@@ -138,10 +152,24 @@
             padding: 0 10px;
         }
 
-        /* Restante do CSS permanece igual... */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Seção de Preços */
         .pricing-section {
             padding: 60px 15px;
             background-color: #0a0a0a;
+            width: 100%;
+            max-width: 100vw;
+            overflow: hidden !important;
         }
 
         .section-title {
@@ -151,6 +179,7 @@
             color: #00ff88;
             opacity: 0;
             padding: 0 10px;
+            width: 100%;
         }
 
         .section-title.animate {
@@ -173,6 +202,8 @@
             box-shadow: 0 10px 30px rgba(0, 255, 136, 0.15);
             opacity: 0;
             transform: translateY(30px);
+            width: 100%;
+            overflow: hidden !important;
         }
 
         .price-container.animate {
@@ -191,6 +222,7 @@
             margin-bottom: 30px;
             padding-bottom: 20px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            width: 100%;
         }
 
         .price-label {
@@ -205,6 +237,7 @@
             flex-direction: column;
             align-items: center;
             margin-bottom: 15px;
+            width: 100%;
         }
 
         .original-price-text {
@@ -249,6 +282,7 @@
         .final-price-section {
             text-align: center;
             margin: 30px 0;
+            width: 100%;
         }
 
         .final-price {
@@ -267,6 +301,7 @@
 
         .price-details {
             margin-top: 30px;
+            width: 100%;
         }
 
         .detail-item {
@@ -277,6 +312,7 @@
             font-size: clamp(1rem, 3.5vw, 1.3rem);
             padding: 10px 0;
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            width: 100%;
         }
 
         .detail-item:last-child {
@@ -291,9 +327,13 @@
             text-align: center;
         }
 
+        /* Seção de Benefícios */
         .benefits-section {
             padding: 60px 15px;
             background-color: #050505;
+            width: 100%;
+            max-width: 100vw;
+            overflow: hidden !important;
         }
 
         .benefits-container {
@@ -302,6 +342,7 @@
             gap: 25px;
             max-width: 1200px;
             margin: 0 auto;
+            width: 100%;
         }
 
         .benefit-card {
@@ -313,6 +354,8 @@
             transition: all 0.3s ease;
             opacity: 0;
             transform: translateY(30px);
+            width: 100%;
+            overflow: hidden !important;
         }
 
         .benefit-card.animate {
@@ -347,15 +390,20 @@
             line-height: 1.5;
         }
 
+        /* Seção do Processo */
         .process-section {
             padding: 60px 15px;
             background-color: #0a0a0a;
+            width: 100%;
+            max-width: 100vw;
+            overflow: hidden !important;
         }
 
         .process-container {
             max-width: 1000px;
             margin: 0 auto;
             position: relative;
+            width: 100%;
         }
 
         .process-step {
@@ -364,6 +412,7 @@
             margin-bottom: 40px;
             opacity: 0;
             transform: translateX(-30px);
+            width: 100%;
         }
 
         .process-step.animate {
@@ -416,6 +465,7 @@
             border-radius: 12px;
             border-left: 3px solid #00ff88;
             flex-grow: 1;
+            width: 100%;
         }
 
         .process-step:nth-child(even) .step-content {
@@ -435,10 +485,14 @@
             line-height: 1.5;
         }
 
+        /* Seção de Garantia */
         .guarantee-section {
             padding: 60px 15px;
             background-color: #050505;
             text-align: center;
+            width: 100%;
+            max-width: 100vw;
+            overflow: hidden !important;
         }
 
         .guarantee-container {
@@ -450,6 +504,8 @@
             border: 1px solid rgba(0, 255, 136, 0.2);
             opacity: 0;
             transform: translateY(30px);
+            width: 100%;
+            overflow: hidden !important;
         }
 
         .guarantee-container.animate {
@@ -474,6 +530,7 @@
             line-height: 1.6;
         }
 
+        /* Rodapé */
         .footer {
             text-align: center;
             padding: 40px 15px;
@@ -481,12 +538,24 @@
             color: #777;
             font-size: clamp(0.85rem, 3vw, 1rem);
             border-top: 1px solid rgba(255, 255, 255, 0.05);
+            width: 100%;
+            max-width: 100vw;
+            overflow: hidden !important;
         }
 
         .footer-highlight {
             color: #00ff88;
             margin-top: 15px;
             font-size: clamp(0.9rem, 3.5vw, 1.1rem);
+        }
+
+        /* Garante que nada ultrapassa a largura */
+        * {
+            max-width: 100vw;
+        }
+
+        img, video {
+            max-width: 100%;
         }
 
         @media (max-width: 768px) {
@@ -555,14 +624,27 @@
                 padding: 25px 15px;
             }
         }
+
+        /* REMOVE QUALQUER OVERLAY DE PLAY */
+        .play-overlay {
+            display: none !important;
+        }
+        
+        .play-button {
+            display: none !important;
+        }
+        
+        [class*="play"] {
+            display: none !important;
+        }
     </style>
 </head>
 <body>
     <!-- Seção 1 - Hero com Motion Video -->
     <section class="hero-section">
-        <video class="video-background" autoplay muted loop playsinline disableRemotePlayback disablePictureInPicture preload="auto" webkit-playsinline>
+        <video class="video-background" autoplay muted loop playsinline preload="auto" webkit-playsinline>
             <source src="motion.mp4" type="video/mp4">
-            Seu navegador não suporta vídeos HTML5.
+            <!-- Se o vídeo falhar, mostra fallback -->
         </video>
         <div class="video-overlay"></div>
         <div class="hero-content">
@@ -720,131 +802,48 @@
     </footer>
 
     <script>
-        // CONFIGURAÇÃO DO VÍDEO 100% AUTOMÁTICO - SEM BOTÕES
+        // CÓDIGO SIMPLIFICADO - SEM BOTÕES, SEM OVERLAYS
         document.addEventListener('DOMContentLoaded', function() {
             const video = document.querySelector('.video-background');
             
-            // 1. CONFIGURAÇÕES BÁSICAS PARA AUTOPLAY
+            // CONFIGURAÇÃO BÁSICA DO VÍDEO
             video.autoplay = true;
             video.muted = true;
             video.loop = true;
             video.playsInline = true;
-            video.setAttribute('webkit-playsinline', '');
-            video.setAttribute('playsinline', '');
-            video.setAttribute('muted', '');
-            video.setAttribute('autoplay', '');
-            
-            // 2. REMOVE QUALQUER CONTROLE
             video.controls = false;
+            
+            // REMOVE QUALQUER ATRIBUTO DE CONTROLE
             video.removeAttribute('controls');
             
-            // 3. IMPEDE QUALQUER INTERAÇÃO
-            video.style.pointerEvents = 'none';
-            video.style.userSelect = 'none';
-            video.style.webkitUserSelect = 'none';
-            
-            // 4. TENTA INICIAR O VÍDEO IMEDIATAMENTE
+            // TENTA INICIAR O VÍDEO
             function startVideo() {
                 if (video.paused) {
-                    const playPromise = video.play();
-                    
-                    if (playPromise !== undefined) {
-                        playPromise.catch(error => {
-                            // Se falhar, tenta de novo silenciosamente
-                            console.log('Tentando estratégia alternativa...');
-                            video.muted = true;
-                            video.play().catch(e => {
-                                console.log('Vídeo não iniciou automaticamente:', e);
-                            });
-                        });
-                    }
+                    video.play().catch(function(e) {
+                        console.log('Autoplay bloqueado, tentando novamente...');
+                        // Se falhar, tenta novamente depois de um tempo
+                        setTimeout(startVideo, 1000);
+                    });
                 }
             }
             
-            // 5. VÁRIAS TENTATIVAS DE INICIAR
+            // INICIA O VÍDEO
             startVideo();
             
-            // Tenta quando o vídeo estiver carregado
-            video.addEventListener('loadeddata', startVideo);
-            
-            // Tenta múltiplas vezes
-            setTimeout(startVideo, 100);
-            setTimeout(startVideo, 500);
-            setTimeout(startVideo, 1000);
-            setTimeout(startVideo, 2000);
-            
-            // 6. SE O VÍDEO PAUSAR, REINICIA AUTOMATICAMENTE
+            // SE O VÍDEO PAUSAR, REINICIA
             video.addEventListener('pause', function() {
-                console.log('Vídeo pausado - reiniciando...');
-                setTimeout(startVideo, 10);
+                setTimeout(startVideo, 100);
             });
             
-            // 7. IMPEDE QUE O USUÁRIO INTERAJA COM O VÍDEO
-            video.addEventListener('touchstart', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                e.stopImmediatePropagation();
-                return false;
-            }, { passive: false, capture: true });
-            
-            video.addEventListener('click', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                e.stopImmediatePropagation();
-                return false;
-            }, { capture: true });
-            
-            // 8. QUANDO A PÁGINA GANHA FOCO, TENTA REINICIAR
-            window.addEventListener('focus', function() {
-                if (video.paused) {
-                    startVideo();
+            // REMOVE QUALQUER ELEMENTO QUE POSSA SER BOTÃO DE PLAY
+            document.querySelectorAll('[class*="play"], [class*="Play"], [id*="play"], [id*="Play"]').forEach(el => {
+                if (el.tagName !== 'VIDEO') {
+                    el.style.display = 'none';
+                    el.remove();
                 }
             });
             
-            // 9. FALLBACK SE O VÍDEO NÃO CARREGAR
-            video.addEventListener('error', function() {
-                console.log('Vídeo não carregou - usando fallback...');
-                video.style.display = 'none';
-                
-                // Cria animação de fallback
-                const fallback = document.createElement('div');
-                fallback.style.position = 'absolute';
-                fallback.style.top = '0';
-                fallback.style.left = '0';
-                fallback.style.width = '100%';
-                fallback.style.height = '100%';
-                fallback.style.zIndex = '1';
-                fallback.style.background = 'linear-gradient(45deg, #001a0d, #000, #001a0d)';
-                
-                document.querySelector('.hero-section').prepend(fallback);
-                
-                // Adiciona partículas
-                for (let i = 0; i < 20; i++) {
-                    const particle = document.createElement('div');
-                    particle.style.position = 'absolute';
-                    particle.style.width = Math.random() * 4 + 2 + 'px';
-                    particle.style.height = particle.style.width;
-                    particle.style.background = i % 2 === 0 ? '#00ff88' : '#00ccff';
-                    particle.style.borderRadius = '50%';
-                    particle.style.opacity = Math.random() * 0.5 + 0.1;
-                    particle.style.left = Math.random() * 100 + 'vw';
-                    particle.style.top = Math.random() * 100 + 'vh';
-                    
-                    fallback.appendChild(particle);
-                    
-                    // Anima a partícula
-                    const anim = particle.animate([
-                        { transform: 'translate(0, 0)', opacity: particle.style.opacity },
-                        { transform: `translate(${Math.random() * 100 - 50}vw, ${Math.random() * 100 - 50}vh)`, opacity: 0 }
-                    ], {
-                        duration: Math.random() * 15000 + 10000,
-                        iterations: Infinity,
-                        direction: 'alternate'
-                    });
-                }
-            });
-            
-            // 10. ANIMAÇÃO AO ROLAR A PÁGINA
+            // ANIMAÇÃO AO ROLAR
             const observer = new IntersectionObserver(function(entries) {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
@@ -856,15 +855,74 @@
             document.querySelectorAll('.section-title, .price-container, .benefit-card, .process-step, .guarantee-container').forEach(el => {
                 observer.observe(el);
             });
+            
+            // CORREÇÃO DA BARRA DE ROLAGEM LATERAL
+            function fixHorizontalScroll() {
+                // Verifica se há barra de rolagem horizontal
+                if (document.documentElement.scrollWidth > window.innerWidth) {
+                    // Ajusta elementos que podem estar causando o problema
+                    document.querySelectorAll('*').forEach(el => {
+                        const style = window.getComputedStyle(el);
+                        if (parseFloat(style.width) > window.innerWidth) {
+                            el.style.maxWidth = '100vw';
+                            el.style.overflowX = 'hidden';
+                        }
+                    });
+                    
+                    // Força o body a não ultrapassar
+                    document.body.style.overflowX = 'hidden';
+                    document.body.style.maxWidth = '100vw';
+                }
+            }
+            
+            // Executa a correção
+            fixHorizontalScroll();
+            window.addEventListener('resize', fixHorizontalScroll);
+            window.addEventListener('load', fixHorizontalScroll);
+            
+            // Monitora periodicamente
+            setInterval(fixHorizontalScroll, 1000);
         });
         
-        // ESTRATÉGIA EXTRA: REINICIA O VÍDEO PERIODICAMENTE
+        // GARANTE QUE O VÍDEO CONTINUE RODANDO
         setInterval(() => {
             const video = document.querySelector('.video-background');
             if (video && video.paused) {
                 video.play().catch(() => {});
             }
         }, 3000);
+        
+        // REMOVE QUALQUER BOTÃO CRIADO DINAMICAMENTE
+        const observer = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
+                mutation.addedNodes.forEach(function(node) {
+                    if (node.nodeType === 1) { // Element node
+                        if (node.className && (node.className.includes('play') || node.className.includes('Play'))) {
+                            node.style.display = 'none';
+                            node.remove();
+                        }
+                        if (node.id && (node.id.includes('play') || node.id.includes('Play'))) {
+                            node.style.display = 'none';
+                            node.remove();
+                        }
+                        // Verifica elementos filhos
+                        if (node.querySelectorAll) {
+                            node.querySelectorAll('[class*="play"], [class*="Play"], [id*="play"], [id*="Play"]').forEach(el => {
+                                if (el.tagName !== 'VIDEO') {
+                                    el.style.display = 'none';
+                                    el.remove();
+                                }
+                            });
+                        }
+                    }
+                });
+            });
+        });
+        
+        observer.observe(document.body, {
+            childList: true,
+            subtree: true
+        });
     </script>
 </body>
 </html>
