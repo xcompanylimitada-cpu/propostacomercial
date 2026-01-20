@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proposta Comercial | Site Institucional</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #000;
+            color: #fff;
+            line-height: 1.6;
+            overflow-x: hidden;
+            -webkit-text-size-adjust: 100%; /* Evita zoom em textos no iOS */
+        }
+
+        /* Seção 1 - Hero com Motion */
+        .hero-section {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            padding: 0 15px;
+        }
+
+        .video-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            object-fit: cover;
+            opacity: 0.7;
+            /* Garante que o vídeo não mostre controles em nenhum dispositivo */
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        /* Esconde controles nativos do vídeo em todos os navegadores */
+        .video-background::-webkit-media-controls {
+            display: none !important;
+        }
+
+        .video-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.95) 0%, rgba(0,20,10,0.8) 100%);
+            z-index: 2;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 3;
+            max-width: 900px;
+            width: 100%;
+            padding: 0 10px;
+        }
+
+        .hero-title {
+            font-size: clamp(2.2rem, 8vw, 4.5rem); /* Responsivo com clamp */
+            font-weight: 800;
+            margin-bottom: 1rem;
+            background: linear-gradient(to right, #00ff88, #00ccff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: 1px;
+            position: relative;
+            filter: blur(10px);
+            opacity: 0;
+            animation: focusIn 2.5s cubic-bezier(0.22, 0.61, 0.36, 1) forwards 0.5s;
+        }
+
+        @keyframes focusIn {
+            0% {
+                filter: blur(10px);
+                opacity: 0;
+                transform: translateY(30px);
+                letter-spacing: 5px;
+            }
+            60% {
+                filter: blur(5px);
+                opacity: 0.8;
+                letter-spacing: 1px;
+            }
+            100% {
+                filter: blur(0);
+                opacity: 1;
+                transform: translateY(0);
+                letter-spacing: 1px;
+            }
+        }
+
+        .hero-subtitle {
+            font-size: clamp(1rem, 4vw, 1.8rem); /* Responsivo com clamp */
+            color: #aaa;
+            margin-bottom: 2rem;
+            opacity: 0;
+            animation: fadeInUp 1.8s forwards 2s;
+            padding: 0 10px;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Seção de Preços */
+        .pricing-section {
+            padding: 60px 15px;
+            background-color: #0a0a0a;
+        }
+
+        .section-title {
+            font-size: clamp(2rem, 6vw, 3rem); /* Responsivo com clamp */
+            text-align: center;
+            margin-bottom: 40px;
+            color: #00ff88;
+            opacity: 0;
+            padding: 0 10px;
+        }
+
+        .section-title.animate {
+            animation: fadeIn 1s forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .price-container {
+            background: rgba(15, 15, 15, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: clamp(25px, 5vw, 50px); /* Responsivo com clamp */
+            max-width: 800px;
+            margin: 0 auto;
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            box-shadow: 0 10px 30px rgba(0, 255, 136, 0.15);
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .price-container.animate {
+            animation: slideInUp 1s forwards 0.3s;
+        }
+
+        @keyframes slideInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .price-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .price-label {
+            font-size: clamp(1.5rem, 5vw, 2.2rem); /* Responsivo com clamp */
+            color: #00ff88;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .original-price-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .original-price-text {
+            font-size: clamp(1rem, 3vw, 1.3rem); /* Responsivo com clamp */
+            color: #aaa;
+            margin-bottom: 8px;
+        }
+
+        .strikethrough {
+            position: relative;
+            color: #ff3333;
+            font-size: clamp(1.8rem, 6vw, 2.8rem); /* Responsivo com clamp */
+            font-weight: 700;
+            display: inline-block;
+        }
+
+        .strikethrough::before {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: -5%;
+            width: 110%;
+            height: 3px;
+            background-color: #ff3333;
+            transform: rotate(-12deg);
+            box-shadow: 0 0 10px rgba(255, 51, 51, 0.6);
+        }
+
+        .promo-badge {
+            display: inline-block;
+            background: linear-gradient(45deg, #ff3333, #ff6600);
+            color: white;
+            padding: clamp(8px, 2vw, 10px) clamp(15px, 4vw, 25px); /* Responsivo com clamp */
+            border-radius: 30px;
+            font-size: clamp(0.9rem, 3vw, 1.2rem); /* Responsivo com clamp */
+            font-weight: 600;
+            margin-top: 15px;
+            letter-spacing: 0.5px;
+            box-shadow: 0 3px 10px rgba(255, 51, 51, 0.4);
+        }
+
+        .final-price-section {
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .final-price {
+            font-size: clamp(3rem, 12vw, 6rem); /* Responsivo com clamp */
+            font-weight: 900;
+            text-align: center;
+            color: #fff;
+            background: linear-gradient(to right, #00ff88, #00ccff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 20px rgba(0, 255, 136, 0.4);
+            line-height: 1;
+            margin: 10px 0;
+        }
+
+        .price-details {
+            margin-top: 30px;
+        }
+
+        .detail-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 18px;
+            color: #eee;
+            font-size: clamp(1rem, 3.5vw, 1.3rem); /* Responsivo com clamp */
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .detail-item:last-child {
+            border-bottom: none;
+        }
+
+        .detail-icon {
+            font-size: clamp(1.2rem, 4vw, 1.6rem); /* Responsivo com clamp */
+            color: #00ff88;
+            margin-right: 15px;
+            min-width: 25px;
+            text-align: center;
+        }
+
+        /* Seção de Benefícios */
+        .benefits-section {
+            padding: 60px 15px;
+            background-color: #050505;
+        }
+
+        .benefits-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .benefit-card {
+            background: rgba(20, 20, 20, 0.9);
+            border-radius: 12px;
+            padding: 30px 20px;
+            text-align: center;
+            border: 1px solid rgba(0, 255, 136, 0.1);
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .benefit-card.animate {
+            animation: fadeInUp 0.8s forwards;
+        }
+
+        .benefit-card:nth-child(2) { animation-delay: 0.2s; }
+        .benefit-card:nth-child(3) { animation-delay: 0.4s; }
+        .benefit-card:nth-child(4) { animation-delay: 0.6s; }
+
+        .benefit-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(0, 255, 136, 0.3);
+            box-shadow: 0 8px 20px rgba(0, 255, 136, 0.1);
+        }
+
+        .benefit-icon {
+            font-size: clamp(2.5rem, 8vw, 3.5rem); /* Responsivo com clamp */
+            color: #00ff88;
+            margin-bottom: 20px;
+        }
+
+        .benefit-title {
+            font-size: clamp(1.3rem, 4vw, 1.8rem); /* Responsivo com clamp */
+            color: #fff;
+            margin-bottom: 12px;
+        }
+
+        .benefit-description {
+            color: #aaa;
+            font-size: clamp(0.95rem, 3vw, 1.1rem); /* Responsivo com clamp */
+            line-height: 1.5;
+        }
+
+        /* Seção do Processo */
+        .process-section {
+            padding: 60px 15px;
+            background-color: #0a0a0a;
+        }
+
+        .process-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .process-step {
+            display: flex;
+            align-items: center;
+            margin-bottom: 40px;
+            opacity: 0;
+            transform: translateX(-30px);
+        }
+
+        .process-step.animate {
+            animation: slideInRight 0.8s forwards;
+        }
+
+        .process-step:nth-child(even) {
+            flex-direction: row-reverse;
+            transform: translateX(30px);
+        }
+
+        .process-step:nth-child(even).animate {
+            animation: slideInLeft 0.8s forwards;
+        }
+
+        @keyframes slideInRight {
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slideInLeft {
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .process-step:nth-child(2) { animation-delay: 0.2s; }
+        .process-step:nth-child(3) { animation-delay: 0.4s; }
+        .process-step:nth-child(4) { animation-delay: 0.6s; }
+
+        .step-number {
+            font-size: clamp(2.5rem, 8vw, 4rem); /* Responsivo com clamp */
+            font-weight: 900;
+            color: rgba(0, 255, 136, 0.2);
+            margin-right: 20px;
+            min-width: 50px;
+        }
+
+        .process-step:nth-child(even) .step-number {
+            margin-right: 0;
+            margin-left: 20px;
+        }
+
+        .step-content {
+            background: rgba(20, 20, 20, 0.9);
+            padding: 20px;
+            border-radius: 12px;
+            border-left: 3px solid #00ff88;
+            flex-grow: 1;
+        }
+
+        .process-step:nth-child(even) .step-content {
+            border-left: none;
+            border-right: 3px solid #00ff88;
+        }
+
+        .step-title {
+            font-size: clamp(1.3rem, 4vw, 1.8rem); /* Responsivo com clamp */
+            color: #00ff88;
+            margin-bottom: 8px;
+        }
+
+        .step-description {
+            color: #ccc;
+            font-size: clamp(0.95rem, 3vw, 1.1rem); /* Responsivo com clamp */
+            line-height: 1.5;
+        }
+
+        /* Seção de Garantia */
+        .guarantee-section {
+            padding: 60px 15px;
+            background-color: #050505;
+            text-align: center;
+        }
+
+        .guarantee-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(0, 255, 136, 0.05);
+            border-radius: 15px;
+            padding: clamp(40px, 8vw, 60px) clamp(20px, 5vw, 40px); /* Responsivo com clamp */
+            border: 1px solid rgba(0, 255, 136, 0.2);
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .guarantee-container.animate {
+            animation: fadeInUp 1s forwards;
+        }
+
+        .guarantee-icon {
+            font-size: clamp(3rem, 10vw, 5rem); /* Responsivo com clamp */
+            color: #00ff88;
+            margin-bottom: 20px;
+        }
+
+        .guarantee-title {
+            font-size: clamp(1.8rem, 6vw, 2.5rem); /* Responsivo com clamp */
+            color: #fff;
+            margin-bottom: 15px;
+        }
+
+        .guarantee-text {
+            font-size: clamp(1rem, 3.5vw, 1.3rem); /* Responsivo com clamp */
+            color: #aaa;
+            line-height: 1.6;
+        }
+
+        /* Rodapé */
+        .footer {
+            text-align: center;
+            padding: 40px 15px;
+            background-color: #000;
+            color: #777;
+            font-size: clamp(0.85rem, 3vw, 1rem); /* Responsivo com clamp */
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .footer-highlight {
+            color: #00ff88;
+            margin-top: 15px;
+            font-size: clamp(0.9rem, 3.5vw, 1.1rem); /* Responsivo com clamp */
+        }
+
+        /* Otimizações específicas para mobile */
+        @media (max-width: 768px) {
+            .hero-section {
+                padding-top: 20px; /* Evita cortes no topo em mobile */
+            }
+            
+            .process-step {
+                flex-direction: column;
+                text-align: center;
+                margin-bottom: 30px;
+            }
+            
+            .process-step:nth-child(even) {
+                flex-direction: column;
+            }
+            
+            .step-number {
+                margin: 0 0 15px 0;
+            }
+            
+            .process-step:nth-child(even) .step-number {
+                margin: 0 0 15px 0;
+            }
+            
+            .step-content {
+                border-left: 3px solid #00ff88;
+                border-right: none;
+                width: 100%;
+            }
+            
+            .process-step:nth-child(even) .step-content {
+                border-right: none;
+                border-left: 3px solid #00ff88;
+            }
+            
+            .benefits-container {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-title {
+                margin-bottom: 0.5rem;
+            }
+            
+            .hero-subtitle {
+                margin-bottom: 1.5rem;
+            }
+            
+            .price-container {
+                padding: 20px 15px;
+            }
+            
+            .final-price {
+                margin: 5px 0;
+            }
+            
+            .detail-item {
+                margin-bottom: 15px;
+                padding: 8px 0;
+            }
+            
+            .benefit-card {
+                padding: 25px 15px;
+            }
+        }
+
+        /* Previne comportamentos indesejados de toque em mobile */
+        .no-tap-highlight {
+            -webkit-tap-highlight-color: transparent;
+        }
+    </style>
+</head>
+<body class="no-tap-highlight">
+    <!-- Seção 1 - Hero com Motion Video -->
+    <section class="hero-section">
+        <video class="video-background" autoplay muted loop playsinline disableRemotePlayback>
+            <source src="motion.mp4" type="video/mp4">
+            Seu navegador não suporta vídeos HTML5.
+        </video>
+        <div class="video-overlay"></div>
+        <div class="hero-content">
+            <h1 class="hero-title">SITE INSTITUCIONAL</h1>
+            <p class="hero-subtitle">Transforme sua presença digital com um design futurista e impactante</p>
+        </div>
+    </section>
+
+    <!-- Seção de Preços -->
+    <section id="precos" class="pricing-section">
+        <h2 class="section-title">INVESTIMENTO</h2>
+        
+        <div class="price-container">
+            <div class="price-header">
+                <div class="price-label">Site Institucional Completo</div>
+                
+                <div class="original-price-container">
+                    <div class="original-price-text">Valor original</div>
+                    <div class="strikethrough">R$6.500,00</div>
+                </div>
+                
+                <div class="promo-badge">PROMOÇÃO POR TEMPO LIMITADO</div>
+            </div>
+            
+            <div class="final-price-section">
+                <div class="final-price">R$4.000,00</div>
+            </div>
+            
+            <div class="price-details">
+                <div class="detail-item">
+                    <i class="detail-icon fas fa-paint-brush"></i>
+                    <span>Design personalizado e moderno</span>
+                </div>
+                <div class="detail-item">
+                    <i class="detail-icon fas fa-mobile-alt"></i>
+                    <span>Responsivo (mobile, tablet, desktop)</span>
+                </div>
+                <div class="detail-item">
+                    <i class="detail-icon fas fa-share-alt"></i>
+                    <span>Integração com redes sociais</span>
+                </div>
+                <div class="detail-item">
+                    <i class="detail-icon fas fa-envelope"></i>
+                    <span>Formulário de contato</span>
+                </div>
+                <div class="detail-item">
+                    <i class="detail-icon fas fa-bolt"></i>
+                    <span>Otimizado para performance máxima</span>
+                </div>
+                <div class="detail-item">
+                    <i class="detail-icon fas fa-shield-alt"></i>
+                    <span>Segurança avançada e backup</span>
+                </div>
+                <div class="detail-item">
+                    <i class="detail-icon fas fa-search"></i>
+                    <span>Otimização básica para SEO</span>
+                </div>
+                <div class="detail-item">
+                    <i class="detail-icon fas fa-headset"></i>
+                    <span>Suporte por 30 dias após entrega</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Seção de Benefícios -->
+    <section class="benefits-section">
+        <h2 class="section-title">VANTAGENS</h2>
+        
+        <div class="benefits-container">
+            <div class="benefit-card">
+                <i class="benefit-icon fas fa-rocket"></i>
+                <h3 class="benefit-title">Alta Performance</h3>
+                <p class="benefit-description">Sites otimizados para carregamento rápido, melhorando a experiência do usuário e o posicionamento no Google.</p>
+            </div>
+            
+            <div class="benefit-card">
+                <i class="benefit-icon fas fa-eye"></i>
+                <h3 class="benefit-title">Design Impactante</h3>
+                <p class="benefit-description">Layouts modernos e atraentes que comunicam profissionalismo e qualidade para seus clientes.</p>
+            </div>
+            
+            <div class="benefit-card">
+                <i class="benefit-icon fas fa-chart-line"></i>
+                <h3 class="benefit-title">Conversão Otimizada</h3>
+                <p class="benefit-description">Estrutura pensada para guiar visitantes até a ação desejada, aumentando suas conversões.</p>
+            </div>
+            
+            <div class="benefit-card">
+                <i class="benefit-icon fas fa-cogs"></i>
+                <h3 class="benefit-title">Tecnologia Avançada</h3>
+                <p class="benefit-description">Utilizamos as tecnologias mais recentes para garantir segurança, estabilidade e escalabilidade.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Seção do Processo -->
+    <section class="process-section">
+        <h2 class="section-title">NOSSO PROCESSO</h2>
+        
+        <div class="process-container">
+            <div class="process-step">
+                <div class="step-number">01</div>
+                <div class="step-content">
+                    <h3 class="step-title">Briefing e Planejamento</h3>
+                    <p class="step-description">Entendemos suas necessidades, objetivos e público-alvo para criar uma estratégia digital eficiente.</p>
+                </div>
+            </div>
+            
+            <div class="process-step">
+                <div class="step-number">02</div>
+                <div class="step-content">
+                    <h3 class="step-title">Design e Prototipagem</h3>
+                    <p class="step-description">Criamos layouts modernos e funcionais, apresentando protótipos para sua aprovação antes do desenvolvimento.</p>
+                </div>
+            </div>
+            
+            <div class="process-step">
+                <div class="step-number">03</div>
+                <div class="step-content">
+                    <h3 class="step-title">Desenvolvimento</h3>
+                    <p class="step-description">Implementamos todas as funcionalidades com código limpo e tecnologias atualizadas.</p>
+                </div>
+            </div>
+            
+            <div class="process-step">
+                <div class="step-number">04</div>
+                <div class="step-content">
+                    <h3 class="step-title">Entrega e Suporte</h3>
+                    <p class="step-description">Realizamos testes rigorosos, treinamento e fornecemos suporte contínuo após a entrega.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Seção de Garantia -->
+    <section class="guarantee-section">
+        <div class="guarantee-container">
+            <i class="guarantee-icon fas fa-certificate"></i>
+            <h2 class="guarantee-title">Garantia de Satisfação</h2>
+            <p class="guarantee-text">Nosso compromisso é com a excelência. Trabalhamos até que você esteja 100% satisfeito com o resultado final. Oferecemos revisões ilimitadas durante o processo de desenvolvimento para garantir que cada detalhe atenda às suas expectativas.</p>
+        </div>
+    </section>
+
+    <!-- Rodapé -->
+    <footer class="footer">
+        <p>Proposta comercial válida por 30 dias | Entrega em até 30 dias úteis</p>
+        <p class="footer-highlight">
+            <i class="fas fa-code" style="margin-right: 8px;"></i> 
+            Desenvolvido com tecnologia de ponta para resultados excepcionais
+        </p>
+        <p style="margin-top: 25px; color: #555; font-size: 0.85rem;">
+            Entre em contato para personalizar esta proposta conforme suas necessidades específicas
+        </p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Configuração do vídeo para mobile
+            const video = document.querySelector('.video-background');
+            
+            // Força o autoplay e remove controles
+            video.setAttribute('autoplay', '');
+            video.setAttribute('muted', '');
+            video.setAttribute('loop', '');
+            video.setAttribute('playsinline', '');
+            video.setAttribute('disableRemotePlayback', '');
+            video.setAttribute('disablePictureInPicture', '');
+            
+            // Remove controles visuais
+            video.removeAttribute('controls');
+            
+            // Previne pausa ao tocar na tela (mobile)
+            video.addEventListener('touchstart', function(e) {
+                e.preventDefault();
+                // Tenta dar play se estiver pausado
+                if (video.paused) {
+                    video.play().catch(e => console.log("Auto-play prevented"));
+                }
+            }, { passive: false });
+            
+            // Tenta dar play em caso de autoplay bloqueado
+            function attemptAutoPlay() {
+                if (video.paused) {
+                    video.play().then(() => {
+                        console.log('Vídeo iniciado com sucesso');
+                    }).catch(e => {
+                        console.log('Autoplay bloqueado, tentando com interação do usuário');
+                        // Adiciona overlay para forçar interação
+                        addPlayButton();
+                    });
+                }
+            }
+            
+            // Adiciona botão de play se autoplay for bloqueado
+            function addPlayButton() {
+                const playOverlay = document.createElement('div');
+                playOverlay.style.position = 'absolute';
+                playOverlay.style.top = '0';
+                playOverlay.style.left = '0';
+                playOverlay.style.width = '100%';
+                playOverlay.style.height = '100%';
+                playOverlay.style.backgroundColor = 'rgba(0,0,0,0.7)';
+                playOverlay.style.zIndex = '4';
+                playOverlay.style.display = 'flex';
+                playOverlay.style.justifyContent = 'center';
+                playOverlay.style.alignItems = 'center';
+                playOverlay.style.cursor = 'pointer';
+                
+                const playButton = document.createElement('div');
+                playButton.innerHTML = '<i class="fas fa-play" style="font-size: 3rem; color: #00ff88;"></i>';
+                playButton.style.textAlign = 'center';
+                
+                playOverlay.appendChild(playButton);
+                document.querySelector('.hero-section').appendChild(playOverlay);
+                
+                playOverlay.addEventListener('click', function() {
+                    video.play();
+                    playOverlay.style.display = 'none';
+                });
+            }
+            
+            // Tenta autoplay após carregamento
+            video.addEventListener('loadeddata', attemptAutoPlay);
+            
+            // Tenta autoplay após pequeno delay
+            setTimeout(attemptAutoPlay, 1000);
+            
+            // Animação ao rolar a página
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+            
+            const observer = new IntersectionObserver(function(entries) {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('animate');
+                    }
+                });
+            }, observerOptions);
+            
+            // Observar elementos para animação
+            document.querySelectorAll('.section-title, .price-container, .benefit-card, .process-step, .guarantee-container').forEach(el => {
+                observer.observe(el);
+            });
+            
+            // Fallback para o vídeo caso não carregue
+            video.addEventListener('error', function() {
+                console.log('Erro ao carregar o vídeo motion.mp4');
+                // Criar fallback com animação CSS
+                video.style.display = 'none';
+                const motionCanvas = document.createElement('div');
+                motionCanvas.className = 'motion-fallback';
+                motionCanvas.style.position = 'absolute';
+                motionCanvas.style.top = '0';
+                motionCanvas.style.left = '0';
+                motionCanvas.style.width = '100%';
+                motionCanvas.style.height = '100%';
+                motionCanvas.style.zIndex = '1';
+                motionCanvas.style.background = 'linear-gradient(45deg, #001a0d 0%, #000 50%, #001a0d 100%)';
+                
+                const heroSection = document.querySelector('.hero-section');
+                heroSection.insertBefore(motionCanvas, heroSection.firstChild);
+                
+                // Adicionar animação de partículas como fallback
+                createParticlesFallback(motionCanvas);
+            });
+            
+            function createParticlesFallback(container) {
+                for (let i = 0; i < 30; i++) {
+                    const particle = document.createElement('div');
+                    particle.style.position = 'absolute';
+                    particle.style.width = Math.random() * 4 + 2 + 'px';
+                    particle.style.height = particle.style.width;
+                    particle.style.backgroundColor = i % 3 === 0 ? '#00ff88' : (i % 3 === 1 ? '#00ccff' : '#ffffff');
+                    particle.style.borderRadius = '50%';
+                    particle.style.opacity = Math.random() * 0.5 + 0.1;
+                    particle.style.left = Math.random() * 100 + 'vw';
+                    particle.style.top = Math.random() * 100 + 'vh';
+                    
+                    container.appendChild(particle);
+                    
+                    // Animar partícula
+                    animateParticle(particle);
+                }
+            }
+            
+            function animateParticle(particle) {
+                const duration = Math.random() * 20 + 10;
+                const xMovement = Math.random() * 100 - 50;
+                const yMovement = Math.random() * 100 - 50;
+                
+                const keyframes = [
+                    { transform: 'translate(0, 0)', opacity: parseFloat(particle.style.opacity) },
+                    { transform: `translate(${xMovement}vw, ${yMovement}vh)`, opacity: 0 }
+                ];
+                
+                const options = {
+                    duration: duration * 1000,
+                    iterations: Infinity,
+                    direction: 'alternate',
+                    easing: 'ease-in-out'
+                };
+                
+                particle.animate(keyframes, options);
+            }
+            
+            // Previne comportamentos de zoom em double-tap no iOS
+            let lastTouchEnd = 0;
+            document.addEventListener('touchend', function(event) {
+                const now = (new Date()).getTime();
+                if (now - lastTouchEnd <= 300) {
+                    event.preventDefault();
+                }
+                lastTouchEnd = now;
+            }, false);
+        });
+    </script>
+</body>
+</html>
