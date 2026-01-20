@@ -40,38 +40,49 @@
             padding: 0 15px;
         }
 
-        /* Vídeo para desktop, canvas para mobile */
+        /* Container do vídeo com workaround para iOS */
+        .video-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            overflow: hidden;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
         .video-background {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 1;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            min-width: 100%;
+            min-height: 100%;
+            width: auto;
+            height: auto;
             object-fit: cover;
             opacity: 0.7;
+            /* Workaround para iOS - torna o vídeo "invisível" para toques */
+            pointer-events: none;
+            -webkit-transform: translateZ(0);
+            transform: translateZ(0);
         }
 
-        /* EM MOBILE: substitui o vídeo por canvas */
-        @media (max-width: 768px) {
-            .video-background {
-                display: none !important; /* Esconde vídeo no mobile */
-            }
-            
-            .canvas-background {
-                display: block !important; /* Mostra canvas no mobile */
-            }
-        }
-
-        .canvas-background {
+        /* Overlay para interceptar toques no iOS */
+        .video-touch-overlay {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: 1;
-            opacity: 0.7;
-            display: none; /* Escondido por padrão */
+            z-index: 2;
+            background: transparent;
+            /* Permite que o vídeo seja visto mas toques são interceptados */
+            pointer-events: auto;
+            -webkit-tap-highlight-color: transparent;
         }
 
         .video-overlay {
@@ -81,12 +92,12 @@
             width: 100%;
             height: 100%;
             background: linear-gradient(to bottom, rgba(0,0,0,0.95) 0%, rgba(0,20,10,0.8) 100%);
-            z-index: 2;
+            z-index: 3;
         }
 
         .hero-content {
             position: relative;
-            z-index: 3;
+            z-index: 4;
             max-width: 900px;
             width: 100%;
             padding: 0 10px;
@@ -136,7 +147,7 @@
             padding: 0 10px;
         }
 
-        /* Restante do CSS (igual ao anterior) */
+        /* Restante do CSS mantido igual... */
         .pricing-section {
             padding: 60px 15px;
             background-color: #0a0a0a;
@@ -487,6 +498,24 @@
             font-size: clamp(0.9rem, 3.5vw, 1.1rem);
         }
 
+        /* Workaround específico para iOS */
+        @supports (-webkit-touch-callout: none) {
+            /* iOS específico */
+            .video-background {
+                -webkit-transform: translate3d(0,0,0);
+                transform: translate3d(0,0,0);
+                -webkit-backface-visibility: hidden;
+                backface-visibility: hidden;
+                -webkit-perspective: 1000;
+                perspective: 1000;
+            }
+            
+            .video-touch-overlay {
+                /* No iOS, este overlay intercepta todos os toques */
+                z-index: 100;
+            }
+        }
+
         @media (max-width: 768px) {
             .process-step {
                 flex-direction: column;
@@ -554,14 +583,13 @@
 <body>
     <!-- Seção 1 - Hero -->
     <section class="hero-section">
-        <!-- Vídeo para desktop -->
-        <video class="video-background" autoplay muted loop playsinline preload="auto">
-            <source src="motion.mp4" type="video/mp4">
-        </video>
-        
-        <!-- Canvas para mobile (sem botões) -->
-        <canvas class="canvas-background"></canvas>
-        
+        <div class="video-container">
+            <video class="video-background" autoplay muted loop playsinline preload="auto" webkit-playsinline>
+                <source src="motion.mp4" type="video/mp4">
+            </video>
+            <!-- Overlay para interceptar toques no iOS -->
+            <div class="video-touch-overlay"></div>
+        </div>
         <div class="video-overlay"></div>
         <div class="hero-content">
             <h1 class="hero-title">SITE INSTITUCIONAL</h1>
@@ -719,108 +747,97 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Detecta se é mobile
-            const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-            
-            // Elementos
             const video = document.querySelector('.video-background');
-            const canvas = document.querySelector('.canvas-background');
-            const ctx = canvas.getContext('2d');
+            const touchOverlay = document.querySelector('.video-touch-overlay');
             
-            // SE FOR MOBILE: usa canvas em vez de vídeo
-            if (isMobile) {
-                console.log('Mobile detectado - usando canvas em vez de vídeo');
-                
-                // Esconde vídeo, mostra canvas
-                video.style.display = 'none';
-                canvas.style.display = 'block';
-                
-                // Configura tamanho do canvas
-                canvas.width = window.innerWidth;
-                canvas.height = window.innerHeight;
-                
-                // Cria animação no canvas (efeito futurista)
-                function drawCanvasAnimation() {
-                    // Fundo escuro
-                    ctx.fillStyle = '#000';
-                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+            // Detecta iOS
+            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+            
+            // Configuração básica do vídeo
+            video.autoplay = true;
+            video.muted = true;
+            video.loop = true;
+            video.playsInline = true;
+            video.controls = false;
+            
+            // Remove qualquer atributo de controle
+            video.removeAttribute('controls');
+            
+            // Tenta iniciar o vídeo
+            function startVideo() {
+                if (video.paused) {
+                    const playPromise = video.play();
                     
-                    // Gradiente central
-                    const gradient = ctx.createRadialGradient(
-                        canvas.width / 2, canvas.height / 2, 0,
-                        canvas.width / 2, canvas.height / 2, Math.min(canvas.width, canvas.height) / 2
-                    );
-                    gradient.addColorStop(0, 'rgba(0, 255, 136, 0.3)');
-                    gradient.addColorStop(0.5, 'rgba(0, 204, 255, 0.2)');
-                    gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
-                    
-                    ctx.fillStyle = gradient;
-                    ctx.fillRect(0, 0, canvas.width, canvas.height);
-                    
-                    // Partículas
-                    const time = Date.now() * 0.001;
-                    
-                    for (let i = 0; i < 30; i++) {
-                        const x = (Math.sin(time * 0.5 + i * 0.5) * 0.5 + 0.5) * canvas.width;
-                        const y = (Math.cos(time * 0.3 + i * 0.7) * 0.5 + 0.5) * canvas.height;
-                        const size = Math.sin(time + i) * 3 + 4;
-                        
-                        ctx.beginPath();
-                        ctx.arc(x, y, size, 0, Math.PI * 2);
-                        ctx.fillStyle = i % 3 === 0 ? '#00ff88' : (i % 3 === 1 ? '#00ccff' : '#ffffff');
-                        ctx.globalAlpha = 0.6;
-                        ctx.fill();
-                        ctx.globalAlpha = 1.0;
+                    if (playPromise !== undefined) {
+                        playPromise.catch(error => {
+                            console.log('Autoplay bloqueado, tentando estratégias...');
+                            
+                            // Estratégia para iOS: user gesture required
+                            if (isIOS) {
+                                // No iOS, precisamos de um gesto do usuário
+                                // Vamos simular isso com um toque no overlay
+                                touchOverlay.style.cursor = 'pointer';
+                                touchOverlay.title = 'Toque para iniciar o vídeo';
+                                
+                                touchOverlay.addEventListener('click', function initVideo() {
+                                    video.play().then(() => {
+                                        console.log('Vídeo iniciado após toque no iOS');
+                                        // Remove o evento após o primeiro toque
+                                        touchOverlay.removeEventListener('click', initVideo);
+                                        touchOverlay.style.cursor = 'default';
+                                    }).catch(e => {
+                                        console.log('Falha mesmo após toque:', e);
+                                    });
+                                }, { once: true });
+                            } else {
+                                // Para outros dispositivos, tenta novamente
+                                setTimeout(() => {
+                                    video.muted = true;
+                                    video.play().catch(e => {
+                                        console.log('Não foi possível iniciar o vídeo:', e);
+                                    });
+                                }, 1000);
+                            }
+                        });
                     }
-                    
-                    // Linhas conectando partículas
-                    ctx.strokeStyle = 'rgba(0, 255, 136, 0.3)';
-                    ctx.lineWidth = 1;
-                    
-                    for (let i = 0; i < 10; i++) {
-                        const x1 = (Math.sin(time * 0.4 + i) * 0.5 + 0.5) * canvas.width;
-                        const y1 = (Math.cos(time * 0.4 + i) * 0.5 + 0.5) * canvas.height;
-                        const x2 = (Math.sin(time * 0.6 + i + 5) * 0.5 + 0.5) * canvas.width;
-                        const y2 = (Math.cos(time * 0.6 + i + 5) * 0.5 + 0.5) * canvas.height;
-                        
-                        ctx.beginPath();
-                        ctx.moveTo(x1, y1);
-                        ctx.lineTo(x2, y2);
-                        ctx.stroke();
-                    }
-                    
-                    requestAnimationFrame(drawCanvasAnimation);
                 }
+            }
+            
+            // Inicia o vídeo
+            startVideo();
+            
+            // Se o vídeo pausar, tenta reiniciar (exceto no iOS onde precisa de interação)
+            video.addEventListener('pause', function() {
+                if (!isIOS) {
+                    setTimeout(startVideo, 100);
+                }
+            });
+            
+            // Overlay para interceptar toques (especialmente iOS)
+            touchOverlay.addEventListener('touchstart', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
                 
-                // Inicia animação do canvas
-                drawCanvasAnimation();
-                
-                // Ajusta canvas quando redimensionar
-                window.addEventListener('resize', function() {
-                    canvas.width = window.innerWidth;
-                    canvas.height = window.innerHeight;
-                });
-                
-            } else {
-                // SE FOR DESKTOP: usa vídeo normal
-                console.log('Desktop detectado - usando vídeo');
-                
-                // Configura vídeo para autoplay
-                video.autoplay = true;
-                video.muted = true;
-                video.loop = true;
-                video.playsInline = true;
-                video.controls = false;
-                
-                // Tenta iniciar
-                const playPromise = video.play();
-                if (playPromise !== undefined) {
-                    playPromise.catch(() => {
+                // No iOS, um toque pode ser necessário para autoplay
+                if (isIOS && video.paused) {
+                    video.play().catch(() => {
+                        // Se falhar, tenta com mute
                         video.muted = true;
                         video.play();
                     });
                 }
-            }
+            }, { passive: false });
+            
+            touchOverlay.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+            });
+            
+            // Previne o menu de contexto no vídeo
+            video.addEventListener('contextmenu', function(e) {
+                e.preventDefault();
+                return false;
+            });
             
             // Animações ao rolar
             const observer = new IntersectionObserver(function(entries) {
@@ -838,13 +855,27 @@
             // Corrige barra de rolagem lateral
             function fixHorizontalScroll() {
                 document.body.style.overflowX = 'hidden';
-                if (document.documentElement.scrollWidth > window.innerWidth) {
-                    document.documentElement.style.overflowX = 'hidden';
-                }
+                document.documentElement.style.overflowX = 'hidden';
+                
+                // Verifica elementos largos
+                document.querySelectorAll('*').forEach(el => {
+                    const rect = el.getBoundingClientRect();
+                    if (rect.width > window.innerWidth) {
+                        el.style.maxWidth = '100%';
+                        el.style.overflowX = 'hidden';
+                    }
+                });
             }
             
             fixHorizontalScroll();
             window.addEventListener('resize', fixHorizontalScroll);
+            
+            // Verifica periodicamente se o vídeo está rodando
+            setInterval(() => {
+                if (!isIOS && video.paused) {
+                    startVideo();
+                }
+            }, 3000);
         });
     </script>
 </body>
